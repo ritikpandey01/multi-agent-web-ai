@@ -1,3 +1,0 @@
-/* Netlify redirects — SPA routing */
-/* All requests served from index.html */
-/*  /api/*  200  (proxy to backend if set up via Netlify redirects) */

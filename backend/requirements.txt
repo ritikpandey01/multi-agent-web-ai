@@ -7,3 +7,5 @@ apscheduler==3.10.4
 python-dotenv==1.0.1
 pydantic==2.9.0
 sse-starlette==2.1.0
+pyjwt==2.9.0
+bcrypt==4.2.0

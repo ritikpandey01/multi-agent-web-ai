@@ -16,6 +16,7 @@ async def run_pipeline(
     mode: str,
     query_type: str,
     session_id: Optional[str] = None,
+    user_id: Optional[str] = None,
 ) -> FinalReport:
     """Execute the full WebIntel pipeline.
     
@@ -133,6 +134,7 @@ async def run_pipeline(
                 query_type=query_type,
                 report=report.model_dump(),
                 overall_confidence=overall_confidence,
+                user_id=user_id,
             )
         except Exception as e:
             print(f"[Pipeline] DB save error (non-fatal): {e}")

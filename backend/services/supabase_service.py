@@ -1,4 +1,4 @@
-"""Supabase database service — read/write helpers for reports, monitors, diffs."""
+"""Supabase database service — read/write helpers for reports, monitors, diffs, users."""
 
 import os
 from typing import Optional, List, Dict, Any
@@ -24,7 +24,8 @@ def _get_client() -> Client:
 # ─── Reports ────────────────────────────────────────────────────────────────
 
 async def save_report(session_id: str, query: str, mode: str, query_type: str,
-                      report: dict, overall_confidence: float) -> dict:
+                      report: dict, overall_confidence: float,
+                      user_id: Optional[str] = None) -> dict:
     """Save a completed report to the reports table."""
     try:
         client = _get_client()
@@ -37,6 +38,8 @@ async def save_report(session_id: str, query: str, mode: str, query_type: str,
             "overall_confidence": overall_confidence,
             "created_at": datetime.utcnow().isoformat(),
         }
+        if user_id:
+            data["user_id"] = user_id
         result = client.table("reports").insert(data).execute()
         return result.data[0] if result.data else {}
     except Exception as e:
@@ -44,13 +47,16 @@ async def save_report(session_id: str, query: str, mode: str, query_type: str,
         return {}
 
 
-async def get_reports(limit: int = 20) -> List[dict]:
-    """Get recent reports ordered by creation time."""
+async def get_reports(limit: int = 20, user_id: Optional[str] = None) -> List[dict]:
+    """Get recent reports ordered by creation time, optionally filtered by user."""
     try:
         client = _get_client()
-        result = client.table("reports").select("*").order(
+        query = client.table("reports").select("*").order(
             "created_at", desc=True
-        ).limit(limit).execute()
+        ).limit(limit)
+        if user_id:
+            query = query.eq("user_id", user_id)
+        result = query.execute()
         return result.data or []
     except Exception as e:
         print(f"[Supabase] Error fetching reports: {e}")
