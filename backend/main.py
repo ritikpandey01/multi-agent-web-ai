@@ -73,26 +73,9 @@ app.include_router(auth_router)
 
 # ─── Static File Serving ────────────────────────────────────────────────────
 
-FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
-
-# Serve static assets (css, js, images)
-if FRONTEND_DIR.exists():
-    app.mount("/css", StaticFiles(directory=str(FRONTEND_DIR / "css")), name="css")
-    app.mount("/js", StaticFiles(directory=str(FRONTEND_DIR / "js")), name="js")
-
-
-# ─── Routes ─────────────────────────────────────────────────────────────────
-
-@app.get("/", tags=["Pages"])
-async def serve_index():
-    """Serve the main frontend page."""
-    index_file = FRONTEND_DIR / "index.html"
-    if index_file.exists():
-        return Response(
-            content=index_file.read_text(),
-            media_type="text/html",
-        )
-    return {"status": "ok", "service": "WebIntel", "version": "2.0.0"}
+@app.get("/")
+def root():
+    return {"message": "Backend is running"}
 
 
 @app.get("/health", tags=["Health"])
