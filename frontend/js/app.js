@@ -2,7 +2,7 @@
    WebIntel v2.0 — Frontend Application (Full Backend Integration)
    ══════════════════════════════════════════════════════════════════════════ */
 
-const API_BASE = window.location.origin;
+const API_BASE = https://backend-multiagent.onrender.com/;
 
 // ─── State ──────────────────────────────────────────────────────────────────
 let authToken = localStorage.getItem('webintel_token');
